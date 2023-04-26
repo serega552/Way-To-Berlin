@@ -9,11 +9,11 @@ public class Barricada : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if(other.TryGetComponent<Player>(out Player player))
-        _playerController.UseShelter();
+        _playerController.UsingShelter();
     }
 
     private void OnTriggerExit(Collider other)
     {
-        _playerController.UnUseShelter();
+        _playerController.UnUsingShelter();
     }
 }

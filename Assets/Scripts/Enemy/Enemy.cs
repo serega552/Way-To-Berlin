@@ -35,6 +35,12 @@ public class Enemy : MonoBehaviour
     public void Die()
     {
         _point.DieEnemy();
+
+        if(gameObject.TryGetComponent<Sniper>(out Sniper sniper))
+        {
+            sniper.TurnOffImage();
+        }
+
         gameObject.SetActive(false);
     }
 }

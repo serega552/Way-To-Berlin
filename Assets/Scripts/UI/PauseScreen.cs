@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseScreen : Screen
 {
     [SerializeField] private Camera _camera;
 
-    private const string _mainScene = "SampleScene";
     private bool _isPause = false;
 
     private void Start()
@@ -27,7 +25,7 @@ public class PauseScreen : Screen
         }
     }
 
-    protected override void OnButtonClick()
+    protected void OnButtonClick()
     {
         if(_isPause == false)
         {
@@ -46,6 +44,7 @@ public class PauseScreen : Screen
         CanvasGroup.alpha = 1f;
         _isPause = true;
         Time.timeScale = 0f;
+        AudioListener.volume = 0;
     }
 
     public override void Close()
@@ -55,11 +54,6 @@ public class PauseScreen : Screen
         CanvasGroup.alpha = 0f;
         _isPause = false;
         Time.timeScale = 1f;
-    }
-
-    public void Restart()
-    {
-        SceneManager.LoadScene(_mainScene);
-        Close();
+        AudioListener.volume = 1;
     }
 }

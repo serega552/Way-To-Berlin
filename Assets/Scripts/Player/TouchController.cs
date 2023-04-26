@@ -42,8 +42,8 @@ public class TouchController : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 }
 
             }
-            _camera.transform.localRotation = Quaternion.AngleAxis(_followAngles.y, Vector3.up);
-            _camera.transform.localRotation *= Quaternion.AngleAxis(_followAngles.x, Vector3.right);
+            _camera.transform.localRotation = Quaternion.AngleAxis(-_followAngles.y, Vector3.up);
+            _camera.transform.localRotation *= Quaternion.AngleAxis(-_followAngles.x, Vector3.right);
         }
     }
 

@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(AudioSource))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Game _game;
@@ -13,7 +9,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera _camera;
     [SerializeField] private GameObject _guns;
     [SerializeField] private GameObject _hide;
+    [SerializeField] private GameObject _hideButton;
+    [SerializeField] private AudioClip _runClip;
 
+    private AudioSource _audioSourse;
     private bool _isShelter = false;
     private bool _isHide = false;
     private bool _isStop = false;
@@ -25,7 +24,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         GetPointPosition();
-        _animator= GetComponent<Animator>();
+        _audioSourse = GetComponent<AudioSource>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -46,21 +46,26 @@ public class PlayerController : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.T))
             {
-                if (_animator.GetBool("hide") == false)
-                {
-                    _guns.SetActive(false);
-                    _hide.SetActive(true);
-                    _animator.SetBool("hide", true);
-                    _isHide= true;
-                }
-                else
-                {
-                    _guns.SetActive(true);
-                    _hide.SetActive(false);
-                    _animator.SetBool("hide", false);
-                    _isHide= false;
-                }
+               Hide();
             }
+        }
+    }
+
+    public void Hide()
+    {
+        if (_animator.GetBool("hide") == false)
+        {
+            _guns.SetActive(false);
+            _hide.SetActive(true);
+            _animator.SetBool("hide", true);
+            _isHide = true;
+        }
+        else
+        {
+            _guns.SetActive(true);
+            _hide.SetActive(false);
+            _animator.SetBool("hide", false);
+            _isHide = false;
         }
     }
 
@@ -71,22 +76,26 @@ public class PlayerController : MonoBehaviour
 
     private void Stop()
     {
+        _audioSourse.Stop();
         _isStop = true;
     }
 
     public void Continue()
     {
+        _audioSourse.PlayOneShot(_runClip);
         GetPointPosition();
         _isStop = false;
     }
 
-    public void UseShelter()
+    public void UsingShelter()
     {
         _isShelter= true;
+        _hideButton.SetActive(true);
     }
 
-    public void UnUseShelter()
+    public void UnUsingShelter()
     {
         _isShelter= false;
+        _hideButton.SetActive(false);
     }
 }

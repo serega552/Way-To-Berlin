@@ -10,12 +10,13 @@ public class Game : MonoBehaviour
 
     public bool IsMobile => _isMobile;
 
+    private GameUI _gameUI;
     private Transform[] _points;
     private int _currentPoint = -1;
 
     private void Start()
     {
-        _pause.Open();
+        _gameUI = GetComponentInChildren<GameUI>();
 
         _points = new Transform[_path.transform.childCount];
 
@@ -48,7 +49,7 @@ public class Game : MonoBehaviour
         }
         else
         {
-            _pause.Restart();
+            _gameUI.Restart();
         }
         return null;
     }

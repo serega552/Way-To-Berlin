@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class MosinRifle : Weapon
@@ -8,22 +5,31 @@ public class MosinRifle : Weapon
     [SerializeField] private Player _player;
     [SerializeField] private Camera _mosinCamera;
     [SerializeField] private Camera _chapterCamera;
-    [SerializeField] private CanvasGroup _buttons; 
+    [SerializeField] private CanvasGroup _buttons;
 
+    private float _timer;
     private bool _isZoom = false;
+    private int _maxBullet = 5;
+    private int _countBulletSpent = 0;
+
+    private void Awake()
+    {
+        _countBulletSpent = _maxBullet;
+    }
 
     private void Update()
     {
-        if (Input.GetButton("Fire1") && Game.IsMobile == false && Time.time > NextFire)
+        _timer = Time.time;
+
+        if (Input.GetButton("Fire1") && Game.IsMobile == false && _timer > NextFire)
         {
-            Debug.Log("fdgf");
-            NextFire = Time.time + 1.2f / FireRate;
+            NextFire = _timer + 0.7f / FireRate;
             Shoot();
         }
 
-        if (ShootButton.IsHold && Game.IsMobile && Time.time > NextFire)
+        if (ShootButton.IsHold && Game.IsMobile && _timer > NextFire)
         {
-            NextFire = Time.time + 1.2f / FireRate;
+            NextFire = _timer + 0.7f / FireRate;
             Shoot();
         }
 
@@ -31,50 +37,72 @@ public class MosinRifle : Weapon
         {
             Zoom();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Animator.SetTrigger("reload");
+            _countBulletSpent = _maxBullet;
+        }
+
+        CurrentBullets.text = _countBulletSpent.ToString();
+        MaxBullets.text = _maxBullet.ToString();
     }
 
     public override void Shoot()
     {
-        RaycastHit hit;
+        _countBulletSpent--;
 
-        AudioSourse.PlayOneShot(ShootClip);
-
-        Animator.SetTrigger("shoot");
-
-        if (Physics.Raycast(MainCamera.transform.position, MainCamera.transform.forward, out hit, Range) && _isZoom == false)
+        if (_countBulletSpent >= 0)
         {
-            Enemy enemy = hit.transform.GetComponent<Enemy>();
-            Explosion explosion = hit.transform.GetComponent<Explosion>();
+            RaycastHit hit;
 
-            if (enemy != null)
+            AudioSourse.PlayOneShot(ShootClip);
+
+            Animator.SetTrigger("shoot");
+         
+            if (Physics.Raycast(MainCamera.transform.position, MainCamera.transform.forward, out hit, Range) && _isZoom == false)
             {
-                hit.rigidbody.AddForce(-hit.normal * Force);
-                enemy.TakeDamage(Damage);
+                Enemy enemy = hit.transform.GetComponent<Enemy>();
+                Explosion explosion = hit.transform.GetComponent<Explosion>();
+
+                if (enemy != null)
+                {
+                    hit.rigidbody.AddForce(-hit.normal * Force);
+                    enemy.TakeDamage(Damage);
+                }
+
+                if (explosion != null)
+                {
+                    explosion.ExplodeDelay();
+                }
             }
 
-            if (explosion != null)
+            else if (Physics.Raycast(_mosinCamera.transform.position, _mosinCamera.transform.forward, out hit, Range * 100f) && _isZoom)
             {
-                explosion.ExplodeDelay();
+                Enemy enemy = hit.transform.GetComponent<Enemy>();
+                Explosion explosion = hit.transform.GetComponent<Explosion>();
+
+                if (enemy != null)
+                {
+                    hit.rigidbody.AddForce(-hit.normal * Force);
+                    enemy.TakeDamage(Damage);
+                }
+
+                if (explosion != null)
+                {
+                    explosion.ExplodeDelay();
+                }
             }
         }
-
-        else if (Physics.Raycast(_mosinCamera.transform.position, _mosinCamera.transform.forward, out hit, Range * 100f) && _isZoom)
+        else if(_countBulletSpent < 0)
         {
-            Enemy enemy = hit.transform.GetComponent<Enemy>();
-            Explosion explosion = hit.transform.GetComponent<Explosion>();
-
-            if (enemy != null)
-            {
-                hit.rigidbody.AddForce(-hit.normal * Force);
-                enemy.TakeDamage(Damage);
-            }
-
-            if (explosion != null)
-            {
-                explosion.ExplodeDelay();
-            }
+            Animator.SetTrigger("reload");
+            _countBulletSpent = _maxBullet;
         }
+
     }
+
+    
 
     public void Zoom()
     {

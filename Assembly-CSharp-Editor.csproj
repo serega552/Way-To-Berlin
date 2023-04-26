@@ -801,6 +801,9 @@
     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
       <HintPath>Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
     </Reference>
@@ -818,6 +821,9 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Agava.YandexGames">
+      <HintPath>Library\ScriptAssemblies\Agava.YandexGames.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Services.Core">
       <HintPath>Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
@@ -864,11 +870,12 @@
     <Reference Include="Unity.Recorder">
       <HintPath>Library\ScriptAssemblies\Unity.Recorder.dll</HintPath>
     </Reference>
-    <Reference Include="Agava.YandexGames">
-      <HintPath>Library\ScriptAssemblies\Agava.YandexGames.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{751A7DA1-0706-B863-9D3B-C19116DF431B}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{F2BC64AF-0BCC-101C-C140-F1DC33635508}</Project>
       <Name>Assembly-CSharp</Name>
@@ -881,13 +888,13 @@
       <Project>{7298A339-E8D9-54FB-AD79-36460B9AADCD}</Project>
       <Name>LeanTouch</Name>
     </ProjectReference>
-    <ProjectReference Include="LeanCommon.csproj">
-      <Project>{BDE326D4-4B33-C8FF-23A3-D19C3912C2A3}</Project>
-      <Name>LeanCommon</Name>
-    </ProjectReference>
     <ProjectReference Include="Agava.YandexGames.Samples.Playtesting.csproj">
       <Project>{80655217-DEF8-3154-93CD-0001558876D4}</Project>
       <Name>Agava.YandexGames.Samples.Playtesting</Name>
+    </ProjectReference>
+    <ProjectReference Include="LeanCommon.csproj">
+      <Project>{BDE326D4-4B33-C8FF-23A3-D19C3912C2A3}</Project>
+      <Name>LeanCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
