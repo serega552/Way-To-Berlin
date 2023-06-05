@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     private float _health = 100f;    
     private float _currentHealth;
     private float _damage = 1f;
+    private int _price = 5;
 
     public float Damage => _damage;
 
@@ -19,6 +20,9 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         _currentHealth = _health;
+
+        if (_point == null)
+            gameObject.SetActive(false);
     }
 
     public void TakeDamage(float damage)
@@ -42,5 +46,6 @@ public class Enemy : MonoBehaviour
         }
 
         gameObject.SetActive(false);
+        _point.PlayerController.GetComponent<Player>().GetMoney(_price);
     }
 }

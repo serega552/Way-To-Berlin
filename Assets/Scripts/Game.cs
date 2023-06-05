@@ -1,64 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using IJunior.TypedScenes;
 
 public class Game : MonoBehaviour
 {
-    [SerializeField] private Point _path;
     [SerializeField] private bool _isMobile;
-    [SerializeField] private PauseScreen _pause;
 
     public bool IsMobile => _isMobile;
 
+    private Scene _scene;
     private GameUI _gameUI;
-    private Transform[] _points;
-    private int _currentPoint = -1;
 
     private void Start()
     {
         _gameUI = GetComponentInChildren<GameUI>();
-
-        _points = new Transform[_path.transform.childCount];
-
-        for (int i = 0; i < _path.transform.childCount; i++)
-        {
-            _points[i] = _path.transform.GetChild(i);
-        }
     }
 
-    private void Update()
+    private void Awake()
     {
-        if (_currentPoint < _points.Length)
-        {
-            _points[_currentPoint].GetComponent<Point>().MovePlayer();
-        }
+        _scene = SceneManager.GetActiveScene();
     }
 
-    public void AttackPlayer()
+    public void Restart()
     {
-        _points[_currentPoint].GetComponent<Point>().LetEnemiesAttack();
+        SceneManager.LoadScene(_scene.name);
+        Time.timeScale = 1f;
     }
 
-    public Transform TakePointPosition()
+    public void LoadMenu()
     {
-        if (_currentPoint < _points.Length - 1)
-        {
-            _currentPoint++;
-            Transform target = _points[_currentPoint];
-            return target;
-        }
-        else
-        {
-            _gameUI.Restart();
-        }
-        return null;
+        MenuScene.Load();
+        Time.timeScale = 1f;
     }
 
-    public bool TryMoving()
+    public void WinLevel()
     {
-        if (_currentPoint < _points.Length )
-            return true;
-        else
-            return false;
+        _gameUI.Win();
     }
 }

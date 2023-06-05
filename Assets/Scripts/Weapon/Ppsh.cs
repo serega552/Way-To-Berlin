@@ -1,65 +1,63 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ppsh : Weapon
 {
     [SerializeField] private Player _player;
 
-    private int _maxBullet = 71;
-    private int _countBulletSpent;
-
-    private void Awake()
-    {
-        _countBulletSpent = _maxBullet;
-    }
-
     private void Update()
     {
-        if (Input.GetButton("Fire1") && Game.IsMobile == false && Time.time > NextFire)
+        if (Input.GetButton("Fire1") && Game.IsMobile == false && IsShooting == false && IsReloading == false)
         {
-            NextFire = Time.time + 0.04f / FireRate;
-            Shoot();
+            IsShooting = true;
+            StartCoroutine(ShootDelay());
         }
 
-        if(ShootButton.IsHold && Game.IsMobile && Time.time > NextFire)
+        if(ShootButton.IsHold && Game.IsMobile && IsShooting == false && IsReloading == false)
         {
-            NextFire = Time.time + 0.04f / FireRate;
-            Shoot();
+            IsShooting = true;
+            StartCoroutine(ShootDelay());
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && IsReloading == false)
         {
-            Animator.SetTrigger("reload");
-            _countBulletSpent = _maxBullet;
+            IsReloading= true;
+            StartCoroutine(ReloadDelay());
         }
 
-        CurrentBullets.text = _countBulletSpent.ToString();
-        MaxBullets.text = _maxBullet.ToString();
+        CurrentBullets.text = CountBulletSpent.ToString();
+        MaxBullets.text = MaxBulletCount.ToString();
+    }
+
+    public override void Reload()
+    {
+        if(gameObject.activeSelf) 
+            StartCoroutine(ReloadDelay());
     }
 
     public override void Shoot()
     {
-        _countBulletSpent--;
+        CountBulletSpent--;
 
-        if (_countBulletSpent >= 0)
+        if (CountBulletSpent >= 0)
         {
 
             RaycastHit hit;
-
-            AudioSourse.PlayOneShot(ShootClip);
-
-            Animator.SetTrigger("shoot");
 
             if (Physics.Raycast(MainCamera.transform.position, MainCamera.transform.forward, out hit, Range))
             {
                 Enemy enemy = hit.transform.GetComponent<Enemy>();
                 Explosion explosion = hit.transform.GetComponent<Explosion>();
+                Head head = hit.transform.GetComponent<Head>();
 
-                if (enemy != null)
+                if (enemy != null && head == null)
                 {
-                    hit.rigidbody.AddForce(-hit.normal * Force);
                     enemy.TakeDamage(Damage);
+                }
+
+                if(head != null)
+                {
+                    head.GetComponentInParent<Enemy>().TakeDamage(Damage);
                 }
 
                 if (explosion != null)
@@ -68,10 +66,27 @@ public class Ppsh : Weapon
                 }
             }
         }
-        else if(_countBulletSpent < 0)
+        else if(CountBulletSpent < 0)
         {
-            Animator.SetTrigger("reload");
-            _countBulletSpent = _maxBullet;
+            IsReloading= true;
+            StartCoroutine(ReloadDelay());
         }
+
+        IsShooting = false;
+    }
+    private IEnumerator ShootDelay()
+    {
+        yield return new WaitForSeconds(0.1f);
+        AudioSourse.PlayOneShot(ShootClip);
+        Animator.SetTrigger("shoot");
+        Shoot();
+    }
+
+    private IEnumerator ReloadDelay()
+    {
+        Animator.SetTrigger("reload");
+        CountBulletSpent = MaxBulletCount;
+        yield return new WaitForSeconds(1.41f);
+        IsReloading = false;
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MosinRifle : Weapon
@@ -7,30 +8,20 @@ public class MosinRifle : Weapon
     [SerializeField] private Camera _chapterCamera;
     [SerializeField] private CanvasGroup _buttons;
 
-    private float _timer;
     private bool _isZoom = false;
-    private int _maxBullet = 5;
-    private int _countBulletSpent = 0;
-
-    private void Awake()
-    {
-        _countBulletSpent = _maxBullet;
-    }
 
     private void Update()
     {
-        _timer = Time.time;
-
-        if (Input.GetButton("Fire1") && Game.IsMobile == false && _timer > NextFire)
+        if (Input.GetButton("Fire1") && Game.IsMobile == false && IsShooting == false && IsReloading == false)
         {
-            NextFire = _timer + 0.7f / FireRate;
-            Shoot();
+            IsShooting = true;
+            StartCoroutine(ShootDelay());
         }
 
-        if (ShootButton.IsHold && Game.IsMobile && _timer > NextFire)
+        if (ShootButton.IsHold && Game.IsMobile && IsShooting == false && IsReloading == false)
         {
-            NextFire = _timer + 0.7f / FireRate;
-            Shoot();
+            IsShooting = true;
+            StartCoroutine(ShootDelay());
         }
 
         if (Input.GetButtonDown("Fire2") && Game.IsMobile == false)
@@ -38,21 +29,27 @@ public class MosinRifle : Weapon
             Zoom();
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && IsReloading == false)
         {
-            Animator.SetTrigger("reload");
-            _countBulletSpent = _maxBullet;
+            IsReloading = true;
+            StartCoroutine(ReloadDelay());
         }
 
-        CurrentBullets.text = _countBulletSpent.ToString();
-        MaxBullets.text = _maxBullet.ToString();
+        CurrentBullets.text = CountBulletSpent.ToString();
+        MaxBullets.text = MaxBulletCount.ToString();
+    }
+
+    public override void Reload()
+    {
+        if (gameObject.activeSelf)
+            StartCoroutine(ReloadDelay());
     }
 
     public override void Shoot()
     {
-        _countBulletSpent--;
+        CountBulletSpent--;
 
-        if (_countBulletSpent >= 0)
+        if (CountBulletSpent >= 0)
         {
             RaycastHit hit;
 
@@ -64,11 +61,16 @@ public class MosinRifle : Weapon
             {
                 Enemy enemy = hit.transform.GetComponent<Enemy>();
                 Explosion explosion = hit.transform.GetComponent<Explosion>();
+                Head head = hit.transform.GetComponent<Head>();
 
-                if (enemy != null)
+                if (enemy != null && head == null)
                 {
-                    hit.rigidbody.AddForce(-hit.normal * Force);
                     enemy.TakeDamage(Damage);
+                }
+
+                if(head != null)
+                {
+                    head.GetComponentInParent<Enemy>().TakeDamage(Damage * 2);
                 }
 
                 if (explosion != null)
@@ -81,11 +83,16 @@ public class MosinRifle : Weapon
             {
                 Enemy enemy = hit.transform.GetComponent<Enemy>();
                 Explosion explosion = hit.transform.GetComponent<Explosion>();
+                Head head = hit.transform.GetComponent<Head>();
 
-                if (enemy != null)
+                if (enemy != null && head == null)
                 {
-                    hit.rigidbody.AddForce(-hit.normal * Force);
                     enemy.TakeDamage(Damage);
+                }
+
+                if (head != null)
+                {
+                    head.GetComponentInParent<Enemy>().TakeDamage(Damage * 2);
                 }
 
                 if (explosion != null)
@@ -94,15 +101,30 @@ public class MosinRifle : Weapon
                 }
             }
         }
-        else if(_countBulletSpent < 0)
+        else if(CountBulletSpent < 0)
         {
-            Animator.SetTrigger("reload");
-            _countBulletSpent = _maxBullet;
+            IsReloading = true;
+            StartCoroutine(ReloadDelay());
         }
 
+        IsShooting= false;
     }
 
-    
+    private IEnumerator ShootDelay()
+    {
+        yield return new WaitForSeconds(1.37f);
+        AudioSourse.PlayOneShot(ShootClip);
+        Animator.SetTrigger("shoot");
+        Shoot();
+    }
+
+    private IEnumerator ReloadDelay()
+    {
+        Animator.SetTrigger("reload");
+        CountBulletSpent = MaxBulletCount;
+        yield return new WaitForSeconds(1.8f);
+        IsReloading = false;
+    }
 
     public void Zoom()
     {

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Point : MonoBehaviour
@@ -10,10 +8,11 @@ public class Point : MonoBehaviour
 
     private int _countEnemy;
 
+    public PlayerController PlayerController => _playerController;
+    public int CountEnemy => _countEnemy;
+
     private void Start()
     {
-        TakePointPosition();
-
         foreach(var item in _enemyControllers)
         {
             _countEnemy++;
@@ -22,14 +21,6 @@ public class Point : MonoBehaviour
         foreach(var item in _snipers)
         {
             _countEnemy++;
-        }
-    }
-
-    public void TakePointPosition()
-    {
-        foreach (var item in _enemyControllers)
-        {
-            item.GetPointPosition(transform);
         }
     }
 
@@ -47,20 +38,11 @@ public class Point : MonoBehaviour
         }
     }
 
-    public void MovePlayer()
-    {
-        if (_countEnemy == 0 && _playerController.transform.position == transform.position)
-        {
-            _playerController.Continue();
-        }
-        else
-        {
-
-        }
-    }
-
     public void DieEnemy()
     {
         _countEnemy--;
+
+        if (_countEnemy == 0)
+            _playerController.Continue();
     }
 }

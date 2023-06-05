@@ -1,23 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameUI : MonoBehaviour
 {
-    [SerializeField] private string _scene;
+    [SerializeField] private WinScreen _winScreen;
+    [SerializeField] private PauseScreen _pause;
 
-    private const string _mainMenuScene = "MenuScene"; 
-
-    public void Restart()
+    private void Start()
     {
-        SceneManager.LoadScene(_scene);
-        Time.timeScale = 1f;
+        _pause.Open();
     }
 
-    public void LoadMenu()
+    public void Win()
     {
-        SceneManager.LoadScene(_mainMenuScene);
-        Time.timeScale = 1f;
+        _winScreen.Open();
     }
 }

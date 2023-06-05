@@ -57,8 +57,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Explosion.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenu\ShopScreen.cs" />
+    <Compile Include="Assets\Scripts\UI\PainScreen.cs" />
     <Compile Include="Assets\Scripts\Barricada.cs" />
-    <Compile Include="Assets\Scripts\UI\MainMenu\GroupLevelsScreen.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenu\AdditionalMenus.cs" />
     <Compile Include="Assets\Particle Dissolve Shader by Moonflower Carnivore\Scripts\PDS_GameController.cs" />
     <Compile Include="Assets\Scripts\UI\HealthBarPlayer.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyController.cs" />
@@ -67,11 +69,17 @@
     <Compile Include="Assets\Scripts\UI\Screen.cs" />
     <Compile Include="Assets\Scripts\UI\Bar.cs" />
     <Compile Include="Assets\Scripts\UI\WinScreen.cs" />
+    <Compile Include="Assets\Scripts\Enemy\Head.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenu\WeaponSelection.cs" />
     <Compile Include="Assets\Scenes\Typed\MenuScene.cs" />
+    <Compile Include="Assets\Scenes\Typed\LevelThree.cs" />
+    <Compile Include="Assets\Scripts\GlobalControl.cs" />
+    <Compile Include="Assets\Scenes\Typed\LevelTwo.cs" />
     <Compile Include="Assets\Scripts\Weapon\Weapon.cs" />
     <Compile Include="Assets\Scripts\Enemy\Sniper.cs" />
     <Compile Include="Assets\Scripts\UI\ShootButton.cs" />
     <Compile Include="Assets\Scripts\UI\MainMenu\PlotScreen.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenu\Bank.cs" />
     <Compile Include="Assets\Scripts\Point.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />
     <Compile Include="Assets\GUI Kit Casual Game\Scripts\PanelControl.cs" />
@@ -79,10 +87,16 @@
     <Compile Include="Assets\Scripts\Weapon\Ppsh.cs" />
     <Compile Include="Assets\Scripts\Level.cs" />
     <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Weapon\Mp44.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenu\WeaponCard.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerStatistics.cs" />
     <Compile Include="Assets\Scripts\UI\Heart.cs" />
     <Compile Include="Assets\Scripts\Player\TouchController.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenu\SniperWeapon.cs" />
     <Compile Include="Assets\Scenes\Typed\LevelOne.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenu\WeaponStatistics.cs" />
     <Compile Include="Assets\GUI Kit Casual Game\Extensions\UIParticle\UIParticleSystem.cs" />
+    <Compile Include="Assets\Scripts\UI\MainMenu\AutoWeapon.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\UI\PauseScreen.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />

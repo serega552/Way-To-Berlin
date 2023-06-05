@@ -10,7 +10,8 @@ public class PauseScreen : Screen
 
     private void Start()
     {
-        CanvasGroup.alpha= 0f;
+        CanvasGroup.alpha= 1f;
+        CanvasGroup.blocksRaycasts = true;
     }
 
     void Update()
@@ -41,6 +42,7 @@ public class PauseScreen : Screen
     {
         _camera.GetComponent<FirstPersonLook>().enabled = false;
         Cursor.lockState = CursorLockMode.None;
+        CanvasGroup.blocksRaycasts = true;
         CanvasGroup.alpha = 1f;
         _isPause = true;
         Time.timeScale = 0f;
@@ -51,6 +53,7 @@ public class PauseScreen : Screen
     {
         _camera.GetComponent<FirstPersonLook>().enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
+        CanvasGroup.blocksRaycasts = false;
         CanvasGroup.alpha = 0f;
         _isPause = false;
         Time.timeScale = 1f;
